@@ -1,0 +1,28 @@
+name: canteen_app
+description: "Student canteen booking app (Android, iOS, Web) built with Flutter + Firebase."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.2.7
+  intl: ^0.19.0
+  # Firebase (used only when --dart-define=BACKEND=firebase)
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  cloud_functions: ^5.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

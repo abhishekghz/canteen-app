@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+    // The default admin account (matched by email) is admin everywhere, plus
+    // any user whose users/{uid} doc has role == "admin". No Cloud Functions or
+    // custom claims needed — works on the free Spark plan.
+    function isDefaultAdmin() {
+      return isSignedIn() && request.auth.token.email == 'admin@canteen.app';
+    }
+    function isAdmin() {
+      return isDefaultAdmin()
+        || (isSignedIn()
+            && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      // A user creates only their own doc, and only as a student. Promotion to
+      // admin is done from the Firebase console (or by an existing admin).
+      allow create: if isOwner(uid) && request.resource.data.role == 'student';
+      allow update: if (isOwner(uid) && request.resource.data.role == resource.data.role)
+                    || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Menu + config: any signed-in user reads; only admin writes.
+    match /menu/{day} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /config/{doc} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Orders: owner creates/reads own; admin reads all + updates payment status.
+    match /orders/{orderId} {
+      allow read: if isOwner(resource.data.uid) || isAdmin();
+      allow create: if isOwner(request.resource.data.uid);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Coupons: owner reads/creates/updates own; admin reads all.
+    match /coupons/{couponId} {
+      allow read: if isOwner(resource.data.uid) || isAdmin();
+      allow create: if isOwner(request.resource.data.uid);
+      allow update: if isOwner(resource.data.uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}
