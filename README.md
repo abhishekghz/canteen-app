@@ -4,10 +4,6 @@
 
 **A student canteen booking app for Android, iOS and Web — one Flutter codebase, powered by Firebase.**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
-[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%C2%B7%20Firestore%20%C2%B7%20Hosting-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
-[![Platforms](https://img.shields.io/badge/platforms-Android%20%C2%B7%20iOS%20%C2%B7%20Web-3DDC84)](#)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-canteen--app--72a86.web.app-E85D04)](https://canteen-app-72a86.web.app)
 
 **🌐 [Live Web App](https://canteen-app-72a86.web.app)** · **📱 [Download APK](https://github.com/abhishekghz/canteen-app/releases/latest)** · **📘 [User Guide (PDF)](https://github.com/abhishekghz/canteen-app/releases/latest)**
 
@@ -76,20 +72,6 @@ Students register, browse the weekly menu, and book **Breakfast / Lunch / Dinner
 - **Orders & Payments** — view all orders, set status (Unpaid / Paid / Refunded)
 - **Snack slots** configuration
 
-### 💰 Pricing (defaults — all admin‑editable)
-
-| Item | Price |
-|------|------:|
-| Breakfast / Lunch / Dinner | ₹50 each |
-| Extra roti | ₹5 each |
-| Extra sabji | ₹20 each |
-| Packing | ₹15 per meal |
-| Tea / Coffee | ₹10 |
-| Snack | ₹20 |
-
-The pricing formula lives in **one** place (`PricingEngine`) and is unit‑tested. Money is stored as integer paise to avoid floating‑point errors.
-
----
 
 ## 🏗️ Architecture
 
@@ -104,11 +86,6 @@ Data    →  Firebase backend (prod)   |   In‑memory backend (demo/tests)
 Firebase  →  Auth · Cloud Firestore · Hosting
 ```
 
-Everything depends on **repository interfaces**, so the exact same app runs against Firebase in production or an in‑memory backend for instant local demo and tests. Backend is chosen at build time with `--dart-define=BACKEND=firebase|memory` (default `memory`).
-
-📄 Full design & flows: [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) · Implementation plan: [`docs/superpowers/plans/2026-09-19-canteen-app.md`](docs/superpowers/plans/2026-09-19-canteen-app.md)
-
----
 
 ## 🚀 Getting Started
 
@@ -136,37 +113,6 @@ flutter build ipa    --dart-define=BACKEND=firebase   # needs Xcode on macOS
 ```bash
 ./deploy-web.sh       # builds + deploys → https://canteen-app-72a86.web.app
 ```
-Details in [`docs/WEB_DEPLOY.md`](docs/WEB_DEPLOY.md).
-
-### Test
-```bash
-flutter test          # 24 unit + widget tests
-flutter analyze
-```
-
----
-
-## 🧱 Tech Stack
-
-| Concern | Choice |
-|---------|--------|
-| Cross‑platform UI | **Flutter** |
-| State / DI | **Riverpod** |
-| Routing | **go_router** (role‑guarded) |
-| Backend | **Firebase** — Auth, Firestore, Hosting |
-| Local/demo backend | In‑memory repositories |
-| Payments | `PaymentGateway` interface (+ stub) — drop‑in Razorpay/Stripe later |
-
-## 📁 Project Structure
-```
-lib/
-  core/        theme · money · router · shared widgets · contact
-  domain/      entities · pricing engine · repository interfaces
-  data/        firebase backend (prod) · memory backend (demo/tests)
-  features/    auth · menu · booking · snacks · coupons · cart · payment · orders · admin
-functions/     Cloud Functions (optional; not required on the free plan)
-firestore.rules · firebase.json · docs/ · test/
-```
 
 ---
 
@@ -174,4 +120,3 @@ firestore.rules · firebase.json · docs/ · test/
 
 Facing an issue or error? Contact the admin: **Abhishek Gautam** · [gautam.abhishek7100@gmail.com](mailto:gautam.abhishek7100@gmail.com)
 
-<div align="center"><sub>Built with Flutter & Firebase.</sub></div>
